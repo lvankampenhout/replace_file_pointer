@@ -1,4 +1,4 @@
-import re
+import re, os
 
 """
 USAGE:
@@ -28,7 +28,7 @@ def _main_func(description):
 ###############################################################################
     sys.argv.extend([] if "ARGS_FOR_SCRIPT" not in os.environ else os.environ["ARGS_FOR_SCRIPT"].split())
 
-    import update_FW_file_pointers
+    from update_FW_file_pointers import *
     
     caseroot, skip_pnl, set_continue_run, resubmit = parse_command_line(sys.argv, description)
     with Case(caseroot, read_only=False) as case:
@@ -77,11 +77,11 @@ def update_user_nl_pop(year, fname = 'user_nl_pop'):
             line_nw = "".join(line.split()) # removes white space
 
             if (line_nw.find('imau_filename=') != -1):
-                out = re.sub(pattern, f'{year}.nc', line) 
+                out = re.sub(pattern, '{}.nc'.format(year), line) 
             elif (line_nw.find('imau_filename_prev=') != -1):
-                out = re.sub(pattern, f'{year-1}.nc', line) 
+                out = re.sub(pattern, '{}.nc'.format(year-1), line) 
             elif (line_nw.find('imau_filename_next=') != -1):
-                out = re.sub(pattern, f'{year+1}.nc', line) 
+                out = re.sub(pattern, '{}.nc'.format(year+1), line) 
             else:
                 out = line
             replaced_content += out
